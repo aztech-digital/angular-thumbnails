@@ -3,31 +3,31 @@
   'use strict';
 
   function PaginationStatus(currentPage, totalPages) {
-    var currentPage = parseInt(currentPage, 10),
-      totalPages = parseInt(totalPages, 10);
+    var _currentPage = parseInt(currentPage, 10),
+      _totalPages = parseInt(totalPages, 10);
 
     this.currentPage = function () {
-      return currentPage;
-    }
+      return _currentPage;
+    };
 
     this.nextPage = function () {
-      if (currentPage >= totalPages) {
+      if (_currentPage >= _totalPages) {
         return;
       }
 
-      currentPage++;
-    }
+      _currentPage += 1;
+    };
 
     this.previousPage = function () {
-      if (currentPage == 1) {
+      if (_currentPage === 1) {
         return;
       }
 
-      currentPage--;
-    }
+      _currentPage -= 1;
+    };
 
     return this;
-  };
+  }
 
   function RenderViewport(height, width, scale, rotation) {
     var _height = height,
@@ -50,56 +50,55 @@
 
       canvas.height = height;
       canvas.width = width;
-    }
+    };
 
     this.rotateClockwise = function () {
       _rotation += 90;
-    }
+    };
 
     this.rotateCounterClockwise = function () {
       _rotation -= 90;
-    }
+    };
 
     this.getRotation = function () {
       return _rotation;
-    }
-
-    return this;
-  };
-
-  function PdfRenderer(scope, canvas) {
-    var pdfDoc = null;
-
-    var renderPage = function (pagination) {
-      pdfDoc.getPage(pagination.currentPage()).then(function (page) {
-        var viewport = page.getViewport(parseInt(scope.scale, 10) || 1, 0),
-          renderContext = {},
-          targetViewport = new RenderViewport(
-            scope.maxHeight || viewport.height,
-            scope.maxWidth || viewport.width
-          );
-
-        targetViewport.adjustCanvasDimensions(viewport.height, viewport.width, canvas);
-
-        page.render({
-          canvasContext: canvas.getContext('2d'),
-          viewport: page.getViewport(
-            canvas.height / viewport.height,
-            targetViewport.getRotation()
-          )
-        });
-      });
     };
 
+    return this;
+  }
+
+  function PdfRenderer(scope, canvas) {
+    var pdfDoc = null,
+      renderPage = function (pagination) {
+        pdfDoc.getPage(pagination.currentPage()).then(function (page) {
+          var viewport = page.getViewport(parseInt(scope.scale, 10) || 1, 0),
+            renderContext = {},
+            targetViewport = new RenderViewport(
+              scope.maxHeight || viewport.height,
+              scope.maxWidth || viewport.width
+            );
+
+          targetViewport.adjustCanvasDimensions(viewport.height, viewport.width, canvas);
+
+          page.render({
+            canvasContext: canvas.getContext('2d'),
+            viewport: page.getViewport(
+              canvas.height / viewport.height,
+              targetViewport.getRotation()
+            )
+          });
+        });
+      };
+
     this.render = function () {
-      if (! scope.source) {
+      if (!scope.source) {
         return;
       }
 
       PDFJS.disableWorker = true;
       PDFJS.getDocument(scope.source, null, null, scope.onProgress).then(function (_pdfDoc) {
         pdfDoc = _pdfDoc;
-        
+
         scope.$apply(function () {
           renderPage(new PaginationStatus(scope.pageNum || 1, pdfDoc.numPages));
         });
@@ -109,7 +108,29 @@
     };
 
     return this;
-  };
+  }
+
+  function ImgRenderer(scope, canvas) {
+    this.render = function () {
+      var img = new Image();
+
+      img.addEventListener('load', function () {        
+        scope.$apply(function () {
+          (new RenderViewport(
+            scope.maxHeight || img.height, 
+            scope.maxWidth || img.width
+          )).adjustCanvasDimensions(img.height, img.width, canvas);
+          
+          canvas.getContext('2d')
+            .drawImage(img, 0, 0);
+        });
+      }, false);
+
+      img.src = scope.source;
+    };
+
+    return this;
+  }
 
   angular.module('angular-thumbnails', []).directive('thumbnail', function ($window) {
     return {
@@ -127,14 +148,18 @@
 
         element.append(canvas);
 
-        if (scope.fileType == 'pdf') {
+        if (scope.fileType === 'pdf') {
           renderer = new PdfRenderer(scope, canvas);
+        } else if (scope.fileType === 'image') {
+          renderer = new ImgRenderer(scope, canvas);
         }
-        
-        renderer.render();
+
+        if (renderer) {
+          renderer.render();
+        }
       }
 
     };
   });
 
-})();
+}());
