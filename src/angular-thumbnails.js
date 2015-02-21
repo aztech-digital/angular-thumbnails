@@ -114,15 +114,15 @@
     this.render = function () {
       var img = new Image();
 
-      img.addEventListener('load', function () {        
+      img.addEventListener('load', function () {
         scope.$apply(function () {
           (new RenderViewport(
-            scope.maxHeight || img.height, 
+            scope.maxHeight || img.height,
             scope.maxWidth || img.width
           )).adjustCanvasDimensions(img.height, img.width, canvas);
-          
+
           canvas.getContext('2d')
-            .drawImage(img, 0, 0);
+            .drawImage(img, 0, 0, img.width, img.height, canvas.width, canvas.height);
         });
       }, false);
 
