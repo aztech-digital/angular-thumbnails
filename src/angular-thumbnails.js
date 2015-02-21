@@ -122,7 +122,9 @@
           )).adjustCanvasDimensions(img.height, img.width, canvas);
 
           canvas.getContext('2d')
-            .drawImage(img, 0, 0, img.width, img.height, canvas.width, canvas.height);
+            .drawImage(img,
+                    0, 0, img.width, img.height,
+                    0, 0, canvas.width, canvas.height);
         });
       }, false);
 
