@@ -110,6 +110,34 @@
     return this;
   }
 
+  function VideoRenderer(scope, container, canvas) {
+    this.render = function () {
+      var video = document.createElement('video');
+
+      video.setAttribute('style', 'display: none');
+      video.addEventListener('canplay', function () {
+        (new RenderViewport(
+          scope.maxHeight || video.videoHeight,
+          scope.maxWidth || video.videoWidth
+        )).adjustCanvasDimensions(video.videoHeight, video.videoWidth, canvas);
+
+        scope.$apply(function () {
+          canvas.getContext('2d')
+            .drawImage(video,
+              0, 0, video.videoWidth, video.videoHeight,
+              0, 0, canvas.width, canvas.height
+            );
+        });
+      });
+
+      container.append(video);
+      
+      video.src = scope.source;
+    }
+
+    return this;
+  }
+
   function ImgRenderer(scope, canvas) {
     this.render = function () {
       var img = new Image();
@@ -123,8 +151,9 @@
 
           canvas.getContext('2d')
             .drawImage(img,
-                    0, 0, img.width, img.height,
-                    0, 0, canvas.width, canvas.height);
+              0, 0, img.width, img.height,
+              0, 0, canvas.width, canvas.height
+            );
         });
       }, false);
 
@@ -154,6 +183,8 @@
           renderer = new PdfRenderer(scope, canvas);
         } else if (scope.fileType === 'image') {
           renderer = new ImgRenderer(scope, canvas);
+        } else if (scope.fileType === 'video') {
+          renderer = new VideoRenderer(scope, element, canvas); 
         }
 
         if (renderer) {
