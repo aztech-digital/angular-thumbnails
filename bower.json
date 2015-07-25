@@ -9,6 +9,10 @@
      "pdfjs-dist": "1.0.1019"
   },
   "ignore": [
+    ".bower.json",
+    ".gitignore",
+    "package.json",
+    "Gruntfile.js",
     "src/**",
     "demo/**"
   ]
