@@ -175,7 +175,12 @@
       },
       link: function (scope, element, attrs) {
         var canvas = document.createElement('canvas'),
-          renderer = null;
+            renderer = null,
+            renderFunc = function () {
+              if (renderer) {
+                renderer.render();
+              }
+            };
 
         element.append(canvas);
 
@@ -187,11 +192,8 @@
           renderer = new VideoRenderer(scope, element, canvas); 
         }
 
-        if (renderer) {
-          renderer.render();
-        }
+        scope.$watch('source + fileType + scale + maxHeight + maxWidth', renderFunc);
       }
-
     };
   });
 

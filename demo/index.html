@@ -10,6 +10,7 @@
   <script src="../bower_components/angular/angular.js"></script>
   <script src="../bower_components/pdfjs-dist/build/pdf.js"></script>
   <script src="../src/angular-thumbnails.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
@@ -20,7 +21,7 @@
 </head>
 
 <body ng-app="thumbnailsDemo">
-  <div class="container">
+  <div class="container" ng-controller="controller">
     <div class="row">
       <div class="col-md-6">
         <h3>PDF thumbnail</h3>
@@ -30,7 +31,8 @@
         <h3>Image thumbnails</h3>
         <thumbnail class="ng-thumbnail" file-type="image" source="'img.jpg'" max-height="500" max-width="300" scale="1"></thumbnail>
         <div class="clearfix"></div>
-        <thumbnail class="ng-thumbnail" file-type="image" source="'pdf.png'" max-height="500" max-width="300" scale="1"></thumbnail>
+        <thumbnail id="updateMe" class="ng-thumbnail" file-type="{{ type }}" source="image" max-height="500" max-width="300" scale="1"></thumbnail>
+        <p>{{ text }}</p>
       </div>
       <div class="col-md-6">
         <h3>Video thumbnail</h3>
@@ -40,6 +42,24 @@
 
     <script>
       var app = angular.module('thumbnailsDemo', ['angular-thumbnails']);
+      
+      var controller = app.controller('controller', function ($scope) {
+        $scope.type = 'image';
+        $scope.image = 'pdf.png';
+        $scope.text ='Above image will be replaced after 5 seconds';
+        
+        setTimeout(function () {
+          $scope.image = 'img.jpg';
+          $scope.text = 'Image has been replaced, will be set to video in 5 seconds';
+          $scope.$apply();
+            
+          setTimeout(function () {
+            $scope.type = 'video';
+            $scope.text = 'Thumbnail type has been set to video.';
+            $scope.$apply();
+          }, 5000);
+        }, 5000);
+      });
     </script>
 </body>
 
