@@ -2,7 +2,7 @@
   "name": "angular-thumbnails",
   "version": "0.1.1",
   "description": "Angular directive to render file thumbnails on a canvas.",
-  "main": "./src/angular-thumbnails.js",
+  "main": "./dist/angular-thumbnails.min.js",
   "license": "MIT",
   "homepage": "http://github.com/aztech-digital/angular-thumbnails",
   "dependencies": {
