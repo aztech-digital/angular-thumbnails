@@ -1,6 +1,5 @@
 {
   "name": "angular-thumbnails",
-  "version": "0.1.1",
   "description": "Angular directive to render file thumbnails on a canvas.",
   "main": "./dist/angular-thumbnails.min.js",
   "license": "MIT",
@@ -10,6 +9,7 @@
      "pdfjs-dist": "1.0.1019"
   },
   "ignore": [
-    "**/.*"
+    "src/**",
+    "demo/**"
   ]
 }
