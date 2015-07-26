@@ -5,9 +5,10 @@ var ImageRenderer = function() {
     ImageRenderer.prototype.render = function(canvas, deferred) {
         var image = new Image();
         image.addEventListener("load", function() {
+            var _this = this;
             this.scope.$apply(function() {
-                var height = this.scope.maxHeight || image.height;
-                var width = this.scope.maxWidth || image.width;
+                var height = _this.scope.maxHeight || image.height;
+                var width = _this.scope.maxWidth || image.width;
                 var viewport = new RenderingViewport(height, width);
                 var context = canvas.getContext("2d");
                 viewport.adjustCanvas(canvas, image.height, image.width);
@@ -82,32 +83,37 @@ var PdfRenderer = function() {
     function PdfRenderer(scope) {
         this.scope = scope;
     }
-    PdfRenderer.prototype.renderPage = function(canvas, document, paginationStatus, deferred) {
-        document.getPage(paginationStatus.getCurrentPage()).then(function(page) {
-            var pdfViewport = page.getViewport(this.scope.scale || 1, 0);
-            var height = this.scope.maxHeight || pdfViewport.height;
-            var width = this.scope.maxWidth || pdfViewport.width;
-            var viewport = new RenderingViewport(height, width);
-            viewport.adjustCanvas(canvas, height, width);
-            pdfViewport = page.getViewport(canvas.height / pdfViewport.height, viewport.getRotation());
-            var params = new PdfRenderParams(canvas.getContext("2d"), pdfViewport);
-            page.render(params).then(function() {
-                deferred.resolve();
-            }, function() {
-                deferred.reject();
-            });
-        });
-    };
     PdfRenderer.prototype.render = function(canvas, deferred) {
+        var _this = this;
         PDFJS.getDocument(this.scope.source, null, null, this.scope.onProgress).then(function(document) {
-            this.scope.$apply(function() {
-                var paginationStatus = new PaginationStatus(this.scope.pageNum || 1, document.numPages);
-                this.renderPage(canvas, document, paginationStatus, deferred);
+            _this.scope.$apply(function() {
+                var paginationStatus = new PaginationStatus(_this.scope.pageNum || 1, document.numPages);
+                _this.onDocumentReady(canvas, document, paginationStatus, deferred);
             });
         }, function(error) {
             deferred.reject(error);
         });
         return deferred.promise;
+    };
+    PdfRenderer.prototype.onDocumentReady = function(canvas, document, paginationStatus, deferred) {
+        var _this = this;
+        document.getPage(paginationStatus.getCurrentPage()).then(function(page) {
+            _this.onPageReady(canvas, page, deferred);
+        });
+    };
+    PdfRenderer.prototype.onPageReady = function(canvas, page, deferred) {
+        var pdfViewport = page.getViewport(this.scope.scale || 1, 0);
+        var height = this.scope.maxHeight || pdfViewport.height;
+        var width = this.scope.maxWidth || pdfViewport.width;
+        var viewport = new RenderingViewport(height, width);
+        viewport.adjustCanvas(canvas, height, width);
+        pdfViewport = page.getViewport(canvas.height / pdfViewport.height, viewport.getRotation());
+        var params = new PdfRenderParams(canvas.getContext("2d"), pdfViewport);
+        page.render(params).then(function() {
+            deferred.resolve();
+        }, function() {
+            deferred.reject();
+        });
     };
     return PdfRenderer;
 }();
@@ -191,7 +197,7 @@ var AngularThumbnail;
                     var canvas = document.createElement("canvas");
                     var renderFunc = function() {
                         scope.error = false;
-                        _this.renderer.render(_this.qService.defer()).then(scope.onRender, scope.onError);
+                        _this.renderer.render(canvas, _this.qService.defer()).then(scope.onRender, scope.onError);
                     };
                     element.append(canvas);
                     _this.renderer = _this.rendererFactory.getRenderer(scope, scope.fileType);
@@ -220,15 +226,17 @@ var VideoRenderer = function() {
         this.container = container;
     }
     VideoRenderer.prototype.render = function(canvas, deferred) {
+        var _this = this;
         var video = document.createElement("video");
+        var that = this;
         video.setAttribute("style", "display: none");
         video.addEventListener("canplay", function() {
-            var height = this.scope.maxHeight || video.videoHeight;
-            var width = this.scope.maxWidth || video.videoWidth;
+            var height = _this.scope.maxHeight || video.videoHeight;
+            var width = _this.scope.maxWidth || video.videoWidth;
             var viewport = new RenderingViewport(height, width);
             var context = canvas.getContext("2d");
             viewport.adjustCanvas(canvas, video.height, video.width);
-            this.scope.$apply(function() {
+            _this.scope.$apply(function() {
                 context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight, 0, 0, canvas.width, canvas.height);
                 deferred.resolve();
             });

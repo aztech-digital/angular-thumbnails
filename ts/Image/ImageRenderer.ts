@@ -3,11 +3,11 @@ class ImageRenderer implements ElementRenderer {
     constructor(private scope:any) {
     }
 
-    render(canvas:HTMLCanvasElement, deferred:JQueryDeferred<void>):JQueryPromiseCallback<void> {
+    render(canvas:HTMLCanvasElement, deferred:ng.IDeferred<any>):ng.IPromise<any> {
         var image = new Image();
 
         image.addEventListener('load', function () {
-            this.scope.$apply(function () {
+            this.scope.$apply(() => {
                 var height:number = this.scope.maxHeight || image.height;
                 var width:number = this.scope.maxWidth || image.width;
                 var viewport:RenderingViewport = new RenderingViewport(height, width);

@@ -3,11 +3,12 @@ class VideoRenderer implements ElementRenderer {
     constructor(private scope:any, private container:any) {
     }
 
-    render(canvas:HTMLCanvasElement, deferred:JQueryDeferred<void>):JQueryPromiseCallback<void> {
+    render(canvas:HTMLCanvasElement, deferred:ng.IDeferred<any>):ng.IPromise<any> {
         var video:HTMLVideoElement = <HTMLVideoElement>document.createElement('video');
+        var that = this;
 
         video.setAttribute('style', 'display: none');
-        video.addEventListener('canplay', function () {
+        video.addEventListener('canplay', () => {
             var height:number = this.scope.maxHeight || video.videoHeight;
             var width:number = this.scope.maxWidth || video.videoWidth;
             var viewport:RenderingViewport = new RenderingViewport(height, width);
@@ -15,7 +16,7 @@ class VideoRenderer implements ElementRenderer {
 
             viewport.adjustCanvas(canvas, video.height, video.width);
 
-            this.scope.$apply(function () {
+            this.scope.$apply(() => {
                 context.drawImage(video,
                     0, 0, video.videoWidth, video.videoHeight,
                     0, 0, canvas.width, canvas.height

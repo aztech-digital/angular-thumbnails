@@ -23,7 +23,7 @@ module AngularThumbnail.Directives {
 
         private rendererFactory:RendererFactory;
 
-        private renderer;
+        private renderer:ElementRenderer;
 
         private qService:ng.IQService;
 
@@ -37,7 +37,7 @@ module AngularThumbnail.Directives {
             var renderFunc = ():void => {
                 scope.error = false;
 
-                this.renderer.render(this.qService.defer()).then(scope.onRender, scope.onError);
+                this.renderer.render(canvas, this.qService.defer()).then(scope.onRender, scope.onError);
             };
 
             element.append(canvas);
