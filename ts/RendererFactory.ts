@@ -2,11 +2,11 @@ class RendererFactory {
     public getRenderer(scope: ng.IScope, type: string): ElementRenderer {
         switch (type) {
             case 'pdf':
-                return new PdfRenderer(scope);
+                return new PdfRenderer();
             case 'image':
-                return new ImageRenderer(scope);
+                return new ImageRenderer();
             case 'video':
-                return new VideoRenderer(scope, $(window.document.body));
+                return new VideoRenderer($(window.document.body));
         }
 
         return new NullRenderer();

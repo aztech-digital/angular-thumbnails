@@ -1,15 +1,12 @@
 class ImageRenderer implements ElementRenderer {
 
-    constructor(private scope:any) {
-    }
-
-    render(canvas:HTMLCanvasElement, deferred:ng.IDeferred<any>):ng.IPromise<any> {
+    render(scope: ThumbnailScope, canvas:HTMLCanvasElement, deferred:ng.IDeferred<any>):ng.IPromise<any> {
         var image = new Image();
 
         image.addEventListener('load', function () {
-            this.scope.$apply(() => {
-                var height:number = this.scope.maxHeight || image.height;
-                var width:number = this.scope.maxWidth || image.width;
+            scope.$apply(() => {
+                var height:number = scope.maxHeight || image.height;
+                var width:number = scope.maxWidth || image.width;
                 var viewport:RenderingViewport = new RenderingViewport(height, width);
                 var context:CanvasRenderingContext2D = <CanvasRenderingContext2D>canvas.getContext('2d');
 
@@ -25,7 +22,7 @@ class ImageRenderer implements ElementRenderer {
 
         }, false);
 
-        image.src = this.scope.source;
+        image.src = scope.source;
 
         return deferred.promise;
     }

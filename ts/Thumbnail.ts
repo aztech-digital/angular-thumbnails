@@ -1,13 +1,18 @@
-module AngularThumbnail.Directives {
+interface ThumbnailScope extends ng.IScope {
+    error?: any;
+    onRender?: any;
+    onProgress?: any;
+    onError?: any;
+    fileType:string;
+    thumbnail?:any;
+    maxHeight:number;
+    maxWidth:number;
+    source:string;
+    scale?:number;
+    pageNum?:number;
+}
 
-    interface ThumbnailScope extends ng.IScope {
-        error?: any;
-        onRender?: any;
-        onProgress?: any;
-        onError?: any;
-        fileType:string;
-        thumbnail?:any;
-    }
+module AngularThumbnail.Directives {
 
     class Thumbnail implements ng.IDirective {
         public restrict = 'E';
@@ -23,8 +28,6 @@ module AngularThumbnail.Directives {
 
         private rendererFactory:RendererFactory;
 
-        private renderer:ElementRenderer;
-
         private qService:ng.IQService;
 
         constructor($q:ng.IQService) {
@@ -34,15 +37,16 @@ module AngularThumbnail.Directives {
 
         link = (scope:ThumbnailScope, element:ng.IAugmentedJQuery, attrs:ng.IAttributes, ctrl:any) => {
             var canvas = document.createElement('canvas');
-            var renderFunc = ():void => {
+            var renderer:ElementRenderer;
+            var renderFunc = () => {
                 scope.error = false;
 
-                this.renderer.render(canvas, this.qService.defer()).then(scope.onRender, scope.onError);
+                renderer.render(scope, canvas, this.qService.defer()).then(scope.onRender, scope.onError);
             };
 
             element.append(canvas);
 
-            this.renderer = this.rendererFactory.getRenderer(scope, scope.fileType);
+            renderer = this.rendererFactory.getRenderer(scope, scope.fileType);
 
             scope.thumbnail = element;
             scope.$watch('source + fileType + scale + maxHeight + maxWidth', renderFunc);
