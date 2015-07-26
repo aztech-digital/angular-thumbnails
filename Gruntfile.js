@@ -5,11 +5,28 @@ module.exports = function (grunt) {
   require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
 
   var scripts = [
-        'src/angular-thumbnails.js'
+        'build/ts/**/*.js',
+        'build/ts/*.js'
     ];
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    typescript: {
+      base: {
+        src: [
+          'typings/**/*.ts',
+          'ts/*.ts', 
+          'ts/**/*.ts'
+        ],
+        dest: 'build/ts/',
+        options: {
+          module: 'commonjs', //or commonjs
+          target: 'es5', //or es3 
+          sourceMap: true,
+          declaration: true
+        }
+      }
+    },
     jsvalidate: {
       options: {
         globals: {},
@@ -72,7 +89,8 @@ module.exports = function (grunt) {
 
   // Default task.
   grunt.registerTask('default', [
-    'clean:dist',
+    'clean',
+    'typescript',
     'jsvalidate',
     'concat',
     'uglify',

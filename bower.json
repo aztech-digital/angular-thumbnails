@@ -6,7 +6,7 @@
   "homepage": "http://github.com/aztech-digital/angular-thumbnails",
   "dependencies": {
      "angular": "~1.3",
-     "pdfjs-dist": "1.0.1019"
+     "pdfjs-dist": "~1.1"
   },
   "ignore": [
     ".bower.json",

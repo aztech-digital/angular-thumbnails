@@ -17,6 +17,7 @@
     "grunt-jsvalidate": "^0.2.2",
     "matchdep": "*",
     "grunt-contrib-less": "~1.0.1",
-    "grunt-contrib-clean": "~0.6.0"
+    "grunt-contrib-clean": "~0.6.0",
+    "grunt-typescript": "~0.6.2"
   }
 }
