@@ -1,5 +1,7 @@
-class NullRenderer implements ElementRenderer {
-    render(scope: ThumbnailScope, canvas:HTMLCanvasElement, deferred:ng.IDeferred<any>):ng.IPromise<any> {
-        return deferred.promise;
+module AngularThumbnails {
+    export class NullRenderer implements ElementRenderer {
+        render(scope:ThumbnailScope, canvas:HTMLCanvasElement, deferred:ng.IDeferred<any>):ng.IPromise<any> {
+            return deferred.promise;
+        }
     }
 }

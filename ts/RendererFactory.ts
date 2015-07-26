@@ -1,14 +1,16 @@
-class RendererFactory {
-    public getRenderer(scope: ng.IScope, type: string): ElementRenderer {
-        switch (type) {
-            case 'pdf':
-                return new PdfRenderer();
-            case 'image':
-                return new ImageRenderer();
-            case 'video':
-                return new VideoRenderer($(window.document.body));
-        }
+module AngularThumbnails {
+    export class RendererFactory {
+        public getRenderer(container: ng.IAugmentedJQuery, scope:ng.IScope, type:string):ElementRenderer {
+            switch (type) {
+                case 'pdf':
+                    return new PDF.PdfRenderer();
+                case 'image':
+                    return new Images.ImageRenderer();
+                case 'video':
+                    return new Video.VideoRenderer(container);
+            }
 
-        return new NullRenderer();
+            return new NullRenderer();
+        }
     }
 }

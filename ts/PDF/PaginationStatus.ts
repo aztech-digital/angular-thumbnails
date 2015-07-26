@@ -1,43 +1,45 @@
-class PaginationStatus {
-    constructor(private totalPages:number, private currentPage:number = 1) {
-        if (currentPage > totalPages) {
-            throw new Error();
+module AngularThumbnails.PDF {
+    export class PaginationStatus {
+        constructor(private totalPages:number, private currentPage:number = 1) {
+            if (currentPage > totalPages) {
+                throw new Error();
+            }
+
+            if (currentPage < 0) {
+                throw new Error();
+            }
         }
 
-        if (currentPage < 0) {
-            throw new Error();
-        }
-    }
-
-    getCurrentPage():number {
-        return this.currentPage;
-    }
-
-    getPageCount():number {
-        return this.totalPages;
-    }
-
-    isLastPage():boolean {
-        return this.getCurrentPage() == this.getPageCount();
-    }
-
-    isFirstPage():boolean {
-        return this.getCurrentPage() == 1;
-    }
-
-    moveToNextPage():number {
-        if (this.getCurrentPage() < this.getPageCount()) {
-            this.currentPage += 1;
+        getCurrentPage():number {
+            return this.currentPage;
         }
 
-        return this.getCurrentPage();
-    }
-
-    moveToPreviousPage():number {
-        if (this.getCurrentPage() > 1) {
-            this.currentPage -= 1;
+        getPageCount():number {
+            return this.totalPages;
         }
 
-        return this.getCurrentPage();
+        isLastPage():boolean {
+            return this.getCurrentPage() == this.getPageCount();
+        }
+
+        isFirstPage():boolean {
+            return this.getCurrentPage() == 1;
+        }
+
+        moveToNextPage():number {
+            if (this.getCurrentPage() < this.getPageCount()) {
+                this.currentPage += 1;
+            }
+
+            return this.getCurrentPage();
+        }
+
+        moveToPreviousPage():number {
+            if (this.getCurrentPage() > 1) {
+                this.currentPage -= 1;
+            }
+
+            return this.getCurrentPage();
+        }
     }
 }

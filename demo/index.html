@@ -2,111 +2,117 @@
 <html>
 
 <head>
-  <meta charset="utf-8" />
-  <title>angular-thumbnails demo</title>
-  <!--[if lt IE 9]>
+    <meta charset="utf-8"/>
+    <title>angular-thumbnails demo</title>
+    <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  <script src="../bower_components/angular/angular.js"></script>
-  <script src="../bower_components/pdfjs-dist/build/pdf.js"></script>
-  <script src="../dist/angular-thumbnails.js"></script>
-  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <![endif]-->
+    <script src="../bower_components/angular/angular.js"></script>
+    <script src="../bower_components/pdfjs-dist/build/pdf.js"></script>
+    <script src="../dist/angular-thumbnails.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
-    .ng-thumbnail canvas {
-      border: 1px solid black;
-    }
-  </style>
+    <style>
+        .ng-thumbnail canvas {
+            border: 1px solid black;
+        }
+    </style>
 </head>
 
 <body ng-app="thumbnailsDemo">
 
-  <nav class="navbar navbar-default">
+<nav class="navbar navbar-default">
     <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">angular-thumbnails</a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Showcase</a>
-          </li>
-      </div>
-    </div>
-  </nav>
-
-  <div class="container" ng-controller="controller">
-    <div class="row">
-      <div class="col-md-12">
-        <h3>PDF thumbnail</h3>
-        <!--<thumbnail class="ng-thumbnail" file-type="{{ pdfType }}" source="pdf" max-height="500" max-width="300" scale="1" on-error="onError()">
-        </thumbnail>-->
-      </div>
-      <div class="col-md-12">
-        <h3>Image thumbnails</h3>
-        <div class="row">
-          <div class="col-md-4">
-            <p><strong>Static image</strong>
-            </p>
-            <thumbnail class="ng-thumbnail" file-type="image" source="'img.jpg'" max-height="500" max-width="300" scale="1">
-            </thumbnail>
-          </div>
-          <div class="col-md-4">
-            <p><strong>Bound image with callback</strong>
-            </p>
-            <thumbnail id="update-me" class="ng-thumbnail" file-type="{{ type }}" source="image" max-height="500" max-width="300" scale="1" on-render="onThumbnailRendered()"></thumbnail>
-            <p>{{ text }}</p>
-          </div>
-          <div class="col-md-4">
-            <p id="render-log">
-              <strong>Render log</strong>
-              <br />
-            </p>
-          </div>
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">angular-thumbnails</a>
         </div>
-      </div>
-      <div class="col-md-12">
-        <h3>Video thumbnail</h3>
-        <thumbnail class="ng-thumbnail" file-type="video" source="'small.mp4'" max-height="500" max-width="300" scale="1"></thumbnail>
-      </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Showcase</a>
+                </li>
+        </div>
+    </div>
+</nav>
+
+<div class="container" ng-controller="controller">
+    <div class="row">
+        <div class="col-md-12">
+            <h3>PDF thumbnail</h3>
+            <thumbnail class="ng-thumbnail" file-type="{{ pdfType }}" source="pdf" max-height="500" max-width="300"
+                       scale="1" on-error="onError()">
+            </thumbnail>
+        </div>
+        <div class="col-md-12">
+            <h3>Image thumbnails</h3>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <p><strong>Static image</strong>
+                    </p>
+                    <thumbnail class="ng-thumbnail" file-type="image" source="'img.jpg'" max-height="500"
+                               max-width="300" scale="1">
+                    </thumbnail>
+                </div>
+                <div class="col-md-4">
+                    <p><strong>Bound image with callback</strong>
+                    </p>
+                    <thumbnail id="update-me" class="ng-thumbnail" file-type="{{ type }}" source="image"
+                               max-height="500" max-width="300" scale="1" on-render="onThumbnailRendered()"></thumbnail>
+                    <p>{{ text }}</p>
+                </div>
+                <div class="col-md-4">
+                    <p id="render-log">
+                        <strong>Render log</strong>
+                        <br/>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <h3>Video thumbnail</h3>
+            <thumbnail class="ng-thumbnail" file-type="video" source="'small.mp4'" max-height="500" max-width="300"
+                       scale="1"></thumbnail>
+        </div>
     </div>
 
     <script>
-      var app = angular.module('thumbnailsDemo', ['angular-thumbnails']);
+        var app = angular.module('thumbnailsDemo', ['angular-thumbnails']);
 
-      var controller = app.controller('controller', function ($scope) {
+        var controller = app.controller('controller', function ($scope) {
 
-        $scope.pdfType = 'pdf';
-        $scope.pdf = 'http://aztech.io/pdf.pdf';
+            $scope.pdfType = 'pdf';
+            $scope.pdf = 'http://aztech.io/pdf.pdf';
 
-        $scope.onError = function () {
-          $scope.pdfType = 'image';
-          $scope.pdf = 'error.png';
-        };
+            $scope.onError = function () {
+                $scope.pdfType = 'image';
+                $scope.pdf = 'error.png';
+            };
 
-        $scope.onThumbnailRendered = function () {
-          $('#render-log').append('<br />' + new Date().toLocaleTimeString() + ': Thumbnail has been rendered.');
-        };
-        
-        $scope.type = 'image';
-        $scope.image = 'img2.jpg';
+            $scope.onThumbnailRendered = function () {
+                $('#render-log').append('<br />' + new Date().toLocaleTimeString() + ': Thumbnail has been rendered.');
+            };
 
-        setTimeout(function () {
-          $scope.image = 'img.jpg';
-          $scope.$apply();
-
-          setTimeout(function () {
+            $scope.type = 'image';
             $scope.image = 'img2.jpg';
-            $scope.$apply();
-          }, 5000);
-        }, 5000);
-      });
+
+            setTimeout(function () {
+                $scope.image = 'img.jpg';
+                $scope.$apply();
+
+                setTimeout(function () {
+                    $scope.image = 'img2.jpg';
+                    $scope.$apply();
+                }, 5000);
+            }, 5000);
+        });
     </script>
 </body>
 

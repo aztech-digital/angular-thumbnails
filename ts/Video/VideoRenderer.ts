@@ -1,35 +1,37 @@
-class VideoRenderer implements ElementRenderer {
+module AngularThumbnails.Video {
+    export class VideoRenderer implements ElementRenderer {
 
-    constructor(private container:any) {
-    }
+        private videoElement:HTMLVideoElement;
 
-    render(scope: ThumbnailScope, canvas:HTMLCanvasElement, deferred:ng.IDeferred<any>):ng.IPromise<any> {
-        var video:HTMLVideoElement = <HTMLVideoElement>document.createElement('video');
+        constructor(private container:any) {
+            this.videoElement = <HTMLVideoElement>document.createElement('video');
+            this.container.append(this.videoElement);
+        }
 
-        video.setAttribute('style', 'display: none');
-        video.addEventListener('canplay', () => {
-            var height:number = scope.maxHeight || video.videoHeight;
-            var width:number = scope.maxWidth || video.videoWidth;
-            var viewport:RenderingViewport = new RenderingViewport(height, width);
-            var context:CanvasRenderingContext2D = <CanvasRenderingContext2D> canvas.getContext('2d');
+        render(scope:ThumbnailScope, canvas:HTMLCanvasElement, deferred:ng.IDeferred<any>):ng.IPromise<any> {
+            this.videoElement.setAttribute('style', 'display: none');
+            this.videoElement.addEventListener('canplay', () => {
+                var height:number = scope.maxHeight || this.videoElement.videoHeight;
+                var width:number = scope.maxWidth || this.videoElement.videoWidth;
+                var viewport:RenderingViewport = new RenderingViewport(height, width);
+                var context:CanvasRenderingContext2D = <CanvasRenderingContext2D> canvas.getContext('2d');
 
-            viewport.adjustCanvas(canvas, video.height, video.width);
+                viewport.adjustCanvas(canvas, this.videoElement.videoHeight, this.videoElement.videoWidth);
 
-            scope.$apply(() => {
-                context.drawImage(video,
-                    0, 0, video.videoWidth, video.videoHeight,
-                    0, 0, canvas.width, canvas.height
-                );
+                scope.$apply(() => {
+                    context.drawImage(this.videoElement,
+                        0, 0, this.videoElement.videoWidth, this.videoElement.videoHeight,
+                        0, 0, canvas.width, canvas.height
+                    );
 
-                deferred.resolve();
+                    deferred.resolve();
+                });
+
             });
 
-        });
+            this.videoElement.src = scope.source;
 
-        this.container.append(video);
-
-        video.src = scope.source;
-
-        return deferred.promise;
+            return deferred.promise;
+        }
     }
 }
