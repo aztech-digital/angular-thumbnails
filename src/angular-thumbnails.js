@@ -167,7 +167,7 @@
     return {
       restrict: 'E',
       scope: {
-        'source': '=',
+        'source': '@',
         'scale': '=',
         'fileType': '@',
         'maxHeight': '@',
