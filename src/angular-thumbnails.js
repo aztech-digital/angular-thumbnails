@@ -86,6 +86,8 @@
               canvas.height / viewport.height,
               targetViewport.getRotation()
             )
+          }).then(function(){
+            scope.imgUrl = canvas.toDataURL();
           });
         });
       };
@@ -171,7 +173,8 @@
         'scale': '=',
         'fileType': '@',
         'maxHeight': '@',
-        'maxWidth': '@'
+        'maxWidth': '@',
+        'imgUrl': "="
       },
       link: function (scope, element, attrs) {
         var canvas = document.createElement('canvas'),
