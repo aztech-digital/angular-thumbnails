@@ -48,6 +48,7 @@ Within a controller's scope, you can bind the thumbnail settings to your scope v
 - `source`: URI (can be a data encoded URI) to the media to render.
 - `max-height`: Maximum height of the thumbnail in pixels.
 - `max-width`: Maximum width of the thumbnail in pixels.
+- `img-url`: Image URL base64 encoded. Use this to save the image in your backend as base64.
 
 There currently is no way to set the actual height/width of the thumbnail. The values will calculated based on the
 dimensions of the rendered element, respecting the height/width ratio of the element.
