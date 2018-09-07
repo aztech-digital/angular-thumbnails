@@ -102,7 +102,7 @@
         };
         return this;
     }
-    angular.module("angular-thumbnails", []).directive("thumbnail", function($window) {
+    angular.module("angular-thumbnails", []).directive("thumbnail", [ function() {
         return {
             restrict: "E",
             scope: {
@@ -113,7 +113,7 @@
                 maxWidth: "@",
                 imgUrl: "="
             },
-            link: function(scope, element, attrs) {
+            link: function(scope, element) {
                 var canvas = document.createElement("canvas"), renderer = null, renderFunc = function() {
                     if (renderer) {
                         renderer.render();
@@ -130,5 +130,5 @@
                 scope.$watch("source + fileType + scale + maxHeight + maxWidth", renderFunc);
             }
         };
-    });
+    } ]);
 })();

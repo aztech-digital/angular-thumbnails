@@ -133,7 +133,7 @@
       });
 
       container.append(video);
-      
+
       video.src = scope.source;
     }
 
@@ -165,7 +165,7 @@
     return this;
   }
 
-  angular.module('angular-thumbnails', []).directive('thumbnail', function ($window) {
+  angular.module('angular-thumbnails', []).directive('thumbnail', [function () {
     return {
       restrict: 'E',
       scope: {
@@ -176,7 +176,7 @@
         'maxWidth': '@',
         'imgUrl': "="
       },
-      link: function (scope, element, attrs) {
+      link: function (scope, element) {
         var canvas = document.createElement('canvas'),
             renderer = null,
             renderFunc = function () {
@@ -192,12 +192,12 @@
         } else if (scope.fileType === 'image') {
           renderer = new ImgRenderer(scope, canvas);
         } else if (scope.fileType === 'video') {
-          renderer = new VideoRenderer(scope, element, canvas); 
+          renderer = new VideoRenderer(scope, element, canvas);
         }
 
         scope.$watch('source + fileType + scale + maxHeight + maxWidth', renderFunc);
       }
     };
-  });
+  }]);
 
 }());
